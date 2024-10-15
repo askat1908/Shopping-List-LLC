@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 20px;
+            background-color: #f0f0f5;
+        }
+        h1 {
+            color: #333;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .nav-buttons {
+            display: flex;
+            justify-content: flex-end;
+        }
+        .nav-buttons a {
+            margin-left: 15px;
+            padding: 10px 15px;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+        .nav-buttons a:hover {
+            background-color: #0056b3;
+        }
+        .order {
+            padding: 15px;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .order h2 {
+            margin-bottom: 10px;
+        }
+        .product {
+            padding: 10px 0;
+            border-bottom: 1px solid #ddd;
+        }
+        .product:last-child {
+            border-bottom: none;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button.cancel {
+            background-color: #dc3545;
+        }
+        select, input {
+            margin: 5px 0;
+            padding: 5px;
+        }
+.manage-user-btn {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #008bff;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    font-weight: bold;
+    text-align: center;
+}
+
+.manage-user-btn:hover {
+    background-color: #0056b3;
+    transform: scale(1.05);
+}
+
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>Hello Max, Admin Panel</h1>
+        <div class="nav-buttons">
+            <a href="/">Back to Home</a>
+            <a href="/archive">Order Archive</a>
+            <a href="/logout">Logout</a>
+        </div>
+    </div>
+
+    <form method="POST">
+        {% for i, order in enumerate(orders) %}
+        <div class="order">
+            <h2>Order from {{ order.user }} on {{ order.timestamp }}</h2>
+            {% for j, product in enumerate(order.products) %}
+            <div class="product">
+                <strong>{{ product.name }}</strong> - Quantity: {{ product.quantity }} - Unit: {{ product.unit }} - Request: {{ product.request }} - Status: {{ product.status }}
+                <br>
+                {% if product.status != 'Ordered' and product.status != 'Cancelled' %}
+                    <input type="checkbox" name="ordered_{{ i }}_{{ j }}"> Confirm
+                    <input type="checkbox" name="cancelled_{{ i }}_{{ j }}"> Cancel
+                    <input type="text" name="confirm_reason_{{ i }}_{{ j }}" placeholder="Reason for confirmation (optional)">
+                    <input type="text" name="cancel_reason_{{ i }}_{{ j }}" placeholder="Reason for cancellation">
+                {% endif %}
+                {% if product.status == 'Cancelled' %}
+                    <br>Cancel Reason: {{ product.cancel_reason }}
+                {% endif %}
+                {% if product.status == 'Ordered' %}
+                    <br>Confirm Reason: {{ product.confirm_reason }}
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+        {% endfor %}
+        <button type="submit">Submit</button>
+    </form>
+
+    <h2>Manage Users</h2>
+<a href="/manage_users" class="manage-user-btn">Manage Users</a>
+
+
+</body>
+</html>

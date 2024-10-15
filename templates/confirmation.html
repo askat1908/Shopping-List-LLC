@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Success</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 20px;
+            background-color: #f0f0f5;
+            text-align: center;
+        }
+        h1 {
+            color: #28a745;
+        }
+        button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1.1em;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Order Successfully Ordered!</h1>
+    <p>Your order has been successfully placed, {{ current_user }}.</p>
+   <button onclick="window.location.href='{{ home_route }}'">Go Home</button>
+
+
+
+</body>
+</html>

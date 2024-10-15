@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Archive</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 20px;
+            background-color: #f0f0f5;
+        }
+        h1 {
+            color: #333;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .nav-buttons {
+            display: flex;
+            justify-content: flex-end;
+        }
+        .nav-buttons a {
+            margin-left: 15px;
+            padding: 10px 15px;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+        .nav-buttons a:hover {
+            background-color: #0056b3;
+        }
+        .order-list {
+            margin-top: 30px;
+            padding: 10px;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .order-item {
+            margin-bottom: 20px;
+            padding: 15px;
+            border-bottom: 1px solid #ddd;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>Order Archive for {{ current_user }}</h1>
+        <div class="nav-buttons">
+            <a href="/">Back to Home</a>
+            <a href="/logout">Logout</a>
+        </div>
+    </div>
+
+    <div class="order-list">
+        <h2>Archived Orders</h2>
+        {% for order in archived_orders %}
+        <div class="order-item">
+            <h3>Order made on {{ order.timestamp }} by {{ order.user }}</h3>
+            <ul>
+                {% for product in order.products %}
+                <li>{{ product.name }} - Quantity: {{ product.quantity }} - Unit: {{ product.unit }} - Request: {{ product.request }} - Status: {{ product.status }}
+                {% if product.status == 'Cancelled' %}
+                    - Cancel Reason: {{ product.cancel_reason }}
+                {% endif %}
+                {% if product.status == 'Ordered' %}
+                    - Confirm Reason: {{ product.confirm_reason }}
+                {% endif %}
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endfor %}
+    </div>
+
+</body>
+</html>

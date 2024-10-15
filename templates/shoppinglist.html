@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopping List</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 20px;
+            background-color: #f0f0f5;
+        }
+        h1 {
+            color: #333;
+        }
+        #today {
+            font-size: 1.5em; /* Увеличенный шрифт для даты */
+            color: #007bff;
+            margin-top: 10px;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .nav-buttons {
+            display: flex;
+            justify-content: flex-end;
+        }
+        .nav-buttons a {
+            margin-left: 15px;
+            padding: 10px 15px;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+        .nav-buttons a:hover {
+            background-color: #0056b3;
+        }
+        .products, .cart {
+            width: 45%;
+            float: left;
+            margin-right: 20px;
+        }
+        .products {
+            padding-right: 20px;
+            border-right: 2px solid #ddd;
+        }
+        .product {
+            padding: 15px;
+            margin-bottom: 10px;
+            background-color: #fff;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+            border: 1px solid #ddd;
+        }
+        .product:hover {
+            background-color: #e9ecef;
+        }
+        .cart {
+            padding-left: 20px;
+        }
+        .cart-item {
+            padding: 15px;
+            border-bottom: 1px solid #ddd;
+            margin-bottom: 10px;
+            position: relative;
+        }
+        .cart-item span {
+            margin-left: 20px;
+            font-weight: bold;
+        }
+        .remove-item {
+            position: absolute;
+            right: 10px;
+            top: 10px;
+            background-color: red;
+            color: white;
+            border: none;
+            padding: 5px;
+            cursor: pointer;
+        }
+        button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1.1em;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+        .add-product {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #f8f9fa;
+            border-radius: 5px;
+        }
+        .order-list {
+            margin-top: 30px;
+            padding: 10px;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            clear: both;
+        }
+        .cart-select {
+            margin-right: 10px;
+        }
+        .special-request {
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            font-size: 1em;
+        }
+        .chat-box {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 300px;
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .chat-header {
+            padding: 10px;
+            background-color: #007bff;
+            color: white;
+            border-top-left-radius: 5px;
+            border-top-right-radius: 5px;
+            cursor: pointer;
+        }
+        .chat-content {
+            padding: 10px;
+            height: 200px;
+            overflow-y: auto;
+            font-size: 0.9em;
+        }
+        .chat-input {
+            padding: 10px;
+            border-top: 1px solid #ccc;
+        }
+        .chat-input input {
+            width: 70%;
+            padding: 5px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+        .chat-input button {
+            width: 28%;
+            padding: 5px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .chat-input button:hover {
+            background-color: #218838;
+        }
+    </style>
+    <script>
+        let cart = {};
+
+        function addToCart(productName) {
+            if (!cart[productName]) {
+                cart[productName] = { quantity: 1, unit: 'pounds', request: '' };
+            } else {
+                cart[productName].quantity++;
+            }
+            updateCart();
+        }
+
+        function removeFromCart(productName) {
+            delete cart[productName];
+            updateCart();
+        }
+
+        function updateCart() {
+            const cartDiv = document.getElementById('cart');
+            cartDiv.innerHTML = '';
+            for (let product in cart) {
+                cartDiv.innerHTML += `
+                    <div class="cart-item">
+                        <span>${product}</span>
+                        <input type="number" class="cart-select" value="${cart[product].quantity}" min="1" onchange="updateQuantity('${product}', this.value)">
+                        <select class="cart-select" onchange="updateUnit('${product}', this.value)">
+                            <option value="pounds" ${cart[product].unit === 'pounds' ? 'selected' : ''}>Pounds</option>
+                            <option value="liters" ${cart[product].unit === 'liters' ? 'selected' : ''}>Liters</option>
+                            <option value="kilograms" ${cart[product].unit === 'kilograms' ? 'selected' : ''}>Kilograms</option>
+                            <option value="cases" ${cart[product].unit === 'cases' ? 'selected' : ''}>Cases</option>
+                            <option value="boxes" ${cart[product].unit === 'boxes' ? 'selected' : ''}>Boxes</option>
+                            <option value="bags" ${cart[product].unit === 'bags' ? 'selected' : ''}>Bags</option>
+                        </select>
+                        <textarea class="special-request" placeholder="Special request (optional)" onchange="updateRequest('${product}', this.value)">${cart[product].request}</textarea>
+                        <button class="remove-item" onclick="removeFromCart('${product}')">X</button>
+                    </div>`;
+            }
+        }
+
+        function updateQuantity(productName, quantity) {
+            cart[productName].quantity = quantity;
+        }
+
+        function updateUnit(productName, unit) {
+            cart[productName].unit = unit;
+        }
+
+        function updateRequest(productName, request) {
+            cart[productName].request = request;
+        }
+
+        function submitCart() {
+            const form = document.getElementById('cartForm');
+            form.innerHTML = '';
+            let i = 1;
+            for (let product in cart) {
+                form.innerHTML += `<input type="hidden" name="product_name_${i}" value="${product}">`;
+                form.innerHTML += `<input type="hidden" name="quantity_${i}" value="${cart[product].quantity}">`;
+                form.innerHTML += `<input type="hidden" name="unit_${i}" value="${cart[product].unit}">`;
+                form.innerHTML += `<input type="hidden" name="request_${i}" value="${cart[product].request}">`;
+                i++;
+            }
+            form.submit();
+        }
+
+        // Функция для отправки сообщений в чат
+        function sendMessage() {
+            const messageInput = document.getElementById('chatMessage');
+            const message = messageInput.value;
+            const currentDate = new Date();
+            const formattedDate = currentDate.toLocaleString();
+
+            if (message.trim() !== '') {
+                const chatContent = document.getElementById('chatContent');
+                chatContent.innerHTML += `<div><strong>{{ current_user }}:</strong> ${message} <small>${formattedDate}</small></div>`;
+                messageInput.value = '';
+
+                // Сохраняем сообщение для синхронизации между всеми аккаунтами (упрощённо)
+                localStorage.setItem('chat', chatContent.innerHTML);
+            }
+        }
+
+        // Загрузка сохранённых сообщений при открытии страницы
+        window.onload = function() {
+            const savedChat = localStorage.getItem('chat');
+            if (savedChat) {
+                document.getElementById('chatContent').innerHTML = savedChat;
+            }
+
+            const now = new Date();
+            const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+            const day = days[now.getDay()];
+            const time = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            document.getElementById('today').innerText = `Today is ${day}, ${time}`;
+        };
+    </script>
+</head>
+<body>
+
+    <div class="header">
+        <h1>Hello, {{ current_user }}</h1>
+        <p id="today"></p> <!-- Здесь отображается текущая дата и время -->
+        <div class="nav-buttons">
+            <a href="/archive">Order Archive</a>
+            <a href="/logout">Logout</a>
+            {% if current_user == 'Max' %}
+            <a href="/admin">Go to Admin Panel</a>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="products">
+        <h2>Available Products</h2>
+        {% for product in available_products %}
+        <div class="product" onclick="addToCart('{{ product }}')">{{ product }}</div>
+        {% endfor %}
+    </div>
+
+    <div class="cart">
+        <h2>Your Cart</h2>
+        <div id="cart"></div>
+        <button onclick="submitCart()">Submit Order</button>
+    </div>
+
+    <form id="cartForm" method="POST" action="/"></form>
+
+    <div class="add-product">
+        <h3>Add a New Product</h3>
+        <form method="POST">
+            <input type="text" name="new_product" placeholder="New product name" required>
+            <button type="submit">Add Product</button>
+        </form>
+    </div>
+
+    <!-- Чат -->
+    <div class="chat-box">
+        <div class="chat-header">Chat</div>
+        <div class="chat-content" id="chatContent"></div>
+        <div class="chat-input">
+            <input type="text" id="chatMessage" placeholder="Type your message...">
+            <button onclick="sendMessage()">Send</button>
+        </div>
+    </div>
+<h2>Your Orders</h2>
+{% if orders %}
+    {% for order in orders %}
+        <div>
+            <p>Order made on {{ order.timestamp }}</p>
+            <ul>
+                {% for product in order.products %}
+                    <li>
+                        {{ product.name }} - Quantity: {{ product.quantity }} {{ product.unit }} - 
+                        Request: {{ product.request }} - 
+                        Status: {{ product.status }}
+                        {% if product.status == "Cancelled" %}
+                            - Cancel Reason: {{ product.cancel_reason }}
+                        {% endif %}
+                        {% if product.status == "Ordered" %}
+                            - Note: {{ product.confirm_reason }}
+                        {% endif %}
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% endfor %}
+{% else %}
+    <p>You have no orders yet.</p>
+{% endif %}
+
+ </div>
+    </div>
+</body>
+</html>

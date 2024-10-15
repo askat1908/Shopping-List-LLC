@@ -1,0 +1,154 @@
+<form method="POST" action="/register">
+    <input type="text" placeholder="Enter Name" name="username" required>
+    <input type="password" placeholder="Enter 4-digit Password" name="password" required>
+    <button type="submit">Register</button>
+</form>
+
+<form method="POST" action="/login">
+    <input type="text" placeholder="Enter Name" name="username" required>
+    <input type="password" placeholder="Enter 4-digit Password" name="password" required>
+    <button type="submit">Login</button>
+</form>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopping List System</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        table {
+            width: 80%;
+            margin: 20px auto;
+            border-collapse: collapse;
+        }
+        table, th, td {
+            border: 1px solid black;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+        button {
+            padding: 10px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1 style="text-align: center;">Submit Your Order</h1>
+
+    <!-- Таблица для ввода продуктов -->
+    <table>
+        <thead>
+            <tr>
+                <th>Product Name</th>
+                <th>Quantity</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Добавляем 10 строк для ввода продуктов -->
+            <tr>
+                <td><input type="text" name="product_name_1"></td>
+                <td><input type="number" name="quantity_1"></td>
+            </tr>
+            <tr>
+                <td><input type="text" name="product_name_2"></td>
+                <td><input type="number" name="quantity_2"></td>
+            </tr>
+            <tr>
+                <td><input type="text" name="product_name_3"></td>
+                <td><input type="number" name="quantity_3"></td>
+            </tr>
+            <!-- Добавляем больше строк -->
+            <tr>
+                <td><input type="text" name="product_name_4"></td>
+                <td><input type="number" name="quantity_4"></td>
+            </tr>
+            <tr>
+                <td><input type="text" name="product_name_5"></td>
+                <td><input type="number" name="quantity_5"></td>
+            </tr>
+            <!-- Всего 10 строк -->
+        </tbody>
+    </table>
+    <div style="text-align: center;">
+        <button type="submit">Submit Order</button>
+    </div>
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        table {
+            width: 90%;
+            margin: 20px auto;
+            border-collapse: collapse;
+        }
+        table, th, td {
+            border: 1px solid black;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+        button {
+            padding: 10px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1 style="text-align: center;">Admin Panel - Review Orders</h1>
+
+    <!-- Здесь администратор видит все заказы -->
+    <table>
+        <thead>
+            <tr>
+                <th>Restaurant Name</th>
+                <th>Ordered By</th>
+                <th>Product Name</th>
+                <th>Quantity</th>
+                <th>Ordered</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Restaurant 1</td>
+                <td>John</td>
+                <td>Tomatoes</td>
+                <td>10 kg</td>
+                <td><input type="checkbox" name="order_1"></td>
+            </tr>
+            <tr>
+                <td>Restaurant 2</td>
+                <td>Mary</td>
+                <td>Flour</td>
+                <td>5 kg</td>
+                <td><input type="checkbox" name="order_2"></td>
+            </tr>
+            <!-- Добавляем больше строк для разных заказов -->
+        </tbody>
+    </table>
+
+    <!-- Кнопка для отправки изменений -->
+    <div style="text-align: center;">
+        <button type="submit">Update Orders</button>
+    </div>
+</body>
+</html>

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Users</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        h1 {
+            color: #333;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #007bff;
+            color: white;
+        }
+        .btn {
+            padding: 5px 10px;
+            background-color: #28a745;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+        .btn.edit {
+            background-color: #ffc107;
+        }
+        .btn.delete {
+            background-color: #dc3545;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Manage Users</h1>
+
+    <table>
+        <tr>
+            <th>Username</th>
+            <th>Password</th>
+            <th>Actions</th>
+        </tr>
+        {% for username, password in users.items() %}
+        <tr>
+            <td>{{ username }}</td>
+            <td>{{ password }}</td>
+            <td>
+                <a href="{{ url_for('edit_user', username=username) }}" class="btn edit">Edit</a>
+                <form action="{{ url_for('delete_user', username=username) }}" method="POST" style="display:inline;">
+                    <button type="submit" class="btn delete">Delete</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <h2>Add New User</h2>
+    <form method="POST" action="{{ url_for('create_user') }}">
+        <label for="new_username">Username:</label>
+        <input type="text" id="new_username" name="new_username" required><br>
+        <label for="new_password">Password:</label>
+        <input type="password" id="new_password" name="new_password" required><br>
+        <button type="submit" class="btn">Add User</button>
+    </form>
+ <!-- Кнопка назад -->
+    <a href="{{ url_for('home') }}" class="btn back-btn">Back to Home</a>
+</body>
+</html>
